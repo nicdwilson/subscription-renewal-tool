@@ -1,5 +1,7 @@
 <?php
-
+/**
+ *  Subscription List Footer HTML
+ */
 ?>
 
 <tfoot>
