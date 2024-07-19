@@ -1,6 +1,17 @@
 <?php
 /**
- * Subscription actions
+ * Subscriptions Class
+ * 
+ * This class handles the subscription renewal tool form submission,
+ * and processes the subscription renewal.
+ * 
+ * The process_subscription_renewal method is responsible for creating a renewal order,
+ * and updating the subscription dates.
+ * 
+ * This could be used by any mthod that needs to handle subscription renewals.
+ * 
+ * 
+ * 
  */
 
  namespace SubscriptionRenewalTool;
@@ -37,20 +48,28 @@ class Subscriptions{
         return self::$instance;
     }
 
+    /**
+     * This proof of concept uses the admin_post action to handle form submissions
+     * and extract the subscription ID and date from the form submission.
+     */
     public function __construct(){
         add_action( 'admin_post_get_subscription_from_email', array( $this, 'get_subscription_from_email') );
         add_action( 'admin_post_process_renewal_tool_subscription_renewal', array( $this, 'subscription_renewal_tool') );
     }
 
-    public function display_subscription_renewal_tool(){
-       ob_start();
-
-    }
-
+    
+    /**
+     * Handle the subscription renewal tool form submission
+     * and grab the subscription ID and date from the form submission.
+     * This then submits the subscription ID and date to the process_subscription_renewal method.
+     */
     public function subscription_renewal_tool(){
 
-        // Process subscription renewal
-        //nonces_verify( 'get_subscription_from_email' );
+        if( ! current_user_can( 'manage_woocommerce' ) ){
+            return;
+        }
+
+        check_admin_referer( 'renew-subscription' );
 
         $subscription_id = absint ( $_POST['subscription_id'] );
        
@@ -132,9 +151,12 @@ class Subscriptions{
     }
 
     public function get_subscription_from_email( $email ){
-        // Get subscription from email
+      
+        if( ! current_user_can( 'manage_woocommerce' ) ){
+            return;
+        }
 
-        //nonces_verify( 'get_subscription_from_email' );
+        check_admin_referer( 'search-subscription' );
 
         $subscriptions = array();
         $subscription_ids = array();
@@ -144,7 +166,7 @@ class Subscriptions{
             $email = sanitize_email( $_POST['email'] );
         }
 
-        $user_id = get_user_by_email( $email );
+        $user_id = get_user_by('email', $email)->ID;
 
         if( empty( $user_id ) ){
            $this->exit_error( 'no_user' );
@@ -167,7 +189,9 @@ class Subscriptions{
 
         
         foreach( $subscriptions as $subscription ){
-            $subscription_ids[] = $subscription->ID;
+            if( $subscription->get_requires_manual_renewal() ){
+                $subscription_ids[] = $subscription->get_id();
+            }
         }
         
 

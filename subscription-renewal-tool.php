@@ -13,7 +13,6 @@
 
 namespace SubscriptionRenewalTool;
 
-define( 'SRT_MIN_WC_VER', '8' );
 define( 'SRT_MIN_SUBS_VER', '3.0' );
 
 // Exit if accessed directly
@@ -32,10 +31,14 @@ class SubscriptionRenewalTool_Loader{
 
     
     public function __construct() {
-        $this->define_constants();
-        $this->includes();
-        $this->init();
+		add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
     }
+
+	public function init_plugin() {
+		$this->define_constants();
+		$this->includes();
+		$this->init();
+	}
     
     private function define_constants() {
         define( 'SRT_PLUGIN_FILE', __FILE__ );
@@ -76,29 +79,15 @@ class SubscriptionRenewalTool_Loader{
 		if ( ! self::is_subs_version_ok() ) {
 			/* translators: %1$s inactive plugin text, %2$s minimum Woo Subscriptions version */
 			self::$errors[] = sprintf( __( '%1$s The plugin requires Woo Subscriptions version %2$s or newer.', 'subscription-renewal-tool' ), $inactive_text, SRT_MIN_SUBS_VER );
-			//$passed         = false;
+			$passed         = false;
 		}
 
 		return $passed;
 	}
 
-    /**
-	 * Checks if the installed WooCommerce version is ok.
-	 *
-	 * @return bool
-	 */
-	public static function is_woocommerce_version_ok() {
-		if ( ! function_exists( 'WC' ) ) {
-			return false;
-		}
-		if ( ! SRT_MIN_WC_VER ) {
-			return true;
-		}
-		return version_compare( WC()->version, SRT_MIN_WC_VER, '>=' );
-	}
 
      /**
-	 * Checks if the installed WooCommerce version is ok.
+	 * Checks if the installed WooCommerce Subscriptions version is ok.
 	 *
 	 * @return bool
 	 */
@@ -106,12 +95,8 @@ class SubscriptionRenewalTool_Loader{
 		if ( ! class_exists( 'WC_Subscriptions' ) ) {
 			return false;
 		}
-		if ( ! SRT_MIN_SUBS_VER ) {
-			return true;
-		}
-        $subs = new \WC_Subscriptions_Plugin;
-        $version = $subs->get_plugin_version();
-		return version_compare( $version, SRT_MIN_SUBS_VER, '>=' );
+	
+		return true;
 	}
 
      /**
