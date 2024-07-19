@@ -13,7 +13,7 @@
 		<tr id="order-<?php echo $subscription->get_id(); ?>" class="order-<?php echo $subscription->get_id(); ?> type-shop_subscription status-active">
 
             <td class="status column-status" data-colname="Status">
-                <mark class="subscription-status order-status status-active active tips">
+                <mark class="subscription-status order-status status-<?php echo $subscription->get_status(); ?> <?php echo $subscription->get_status(); ?> tips">
                     <span><?php echo $subscription->get_status(); ?></span>
                 </mark>
             </td>

@@ -192,7 +192,7 @@ class Subscriptions{
             if( $subscription->get_requires_manual_renewal() ){
                 $subscription_ids[] = $subscription->get_id();
             }else{
-                $automated_subs = $subscription->get_id();
+                $automated_subs[] = $subscription->get_id();
             }
         }
         
@@ -213,7 +213,7 @@ class Subscriptions{
     }
 
     public function exit_error( $exit_error){
-        $exit_error = sanitize_text_field( $exit_error );
+        $exit_error =  $exit_error;
         wp_redirect( admin_url( 'admin.php?page=subscription-renewal-tool&error=' . $exit_error ) );
         exit;
     }

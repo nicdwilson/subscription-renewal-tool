@@ -138,7 +138,18 @@ class Menu{
                 echo '<div class="notice notice-error"><p>Invalid email supplied</p></div>';
                 break;
                 case 'automated_subs':
-                echo '<div class="notice notice-error"><p>This customer only has automated subscriptions.</p></div>';
+                    if( isset( $_GET['subs_ids'] ) ){
+                        $subs_ids = explode( ',', sanitize_text_field( $_GET['subs_ids'] ));
+                    }
+                    if( ! empty( $subs_ids ) ){
+                        foreach( $subs_ids as $sub_id ){
+                            $edit_url = admin_url( 'post.php?post=' . $sub_id . '&action=edit' );
+                            $message .= '<p>Subscription <a href="' . $edit_url . '">#' . $sub_id . '</a> is automated</p>';
+                        }
+                    }
+            
+                echo '<div class="notice notice-error"><p>This customer only has automated subscriptions.</p>' . $message . '</div>';
+                break;
             case 'no_user':
                 echo '<div class="notice notice-error"><p>No user found for that email</p></div>';
                 break;
