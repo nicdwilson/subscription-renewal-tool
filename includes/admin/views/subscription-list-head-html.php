@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Subscription List thead HTML
+ */
 ?>
 
 <thead>
@@ -26,7 +28,7 @@
             <span>Next Payment</span>
         </th>
         <th scope="col" id="last_payment_date" class="manage-column column-last_payment_date sortable desc">
-            <span>Last Order Date</span>
+            <span>Last Payment made</span>
         </th>
         <th scope="col" id="orders" class="manage-column column-orders">
              Orders
