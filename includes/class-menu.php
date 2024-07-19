@@ -128,7 +128,7 @@ class Menu{
 
         switch( $error ){
             case 'no_subscriptions':
-                echo '<div class="notice notice-error"><p>No subscriptions found - remember, this tool works only for manual subscriptions.<br>'
+                echo '<div class="notice notice-error"><p>No subscriptions found - remember, this tool works only for manual subscriptions.<br>';
                 echo 'Your customer may have a credit card stored against their subscription.</p></div>';
                 break;
             case 'invalid_date':
@@ -137,6 +137,8 @@ class Menu{
             case 'no_email':
                 echo '<div class="notice notice-error"><p>Invalid email supplied</p></div>';
                 break;
+                case 'automated_subs':
+                echo '<div class="notice notice-error"><p>This customer only has automated subscriptions.</p></div>';
             case 'no_user':
                 echo '<div class="notice notice-error"><p>No user found for that email</p></div>';
                 break;

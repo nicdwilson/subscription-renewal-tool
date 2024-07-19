@@ -191,9 +191,20 @@ class Subscriptions{
         foreach( $subscriptions as $subscription ){
             if( $subscription->get_requires_manual_renewal() ){
                 $subscription_ids[] = $subscription->get_id();
+            }else{
+                $automated_subs = $subscription->get_id();
             }
         }
         
+        if( empty( $subscription_ids ) && empty( $automated_subs ) ){
+            $this->exit_error( 'no_subscriptions' );
+        }
+
+        if( empty( $subscription_ids ) && ! empty( $automated_subs ) ){
+            $automated_subs = implode( ',', $automated_subs );
+            $this->exit_error( 'automated_subs&subs_ids=' . $automated_subs );
+        }
+
 
         $subscription_ids = implode( ',', $subscription_ids );
 
