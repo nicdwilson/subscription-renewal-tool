@@ -105,6 +105,11 @@ class Subscriptions{
         $interval = $subscription->get_billing_interval();
         $period = $subscription->get_billing_period();
 
+        // do not run a renewal of a subscription with automated payments
+        if( ! $subscription->get_requires_manual_renewal() ){
+            $this->exit_error( 'automated_subs' );
+        }
+
         // Create a renewal order
         do_action( 'woocommerce_scheduled_subscription_payment', $subscription_id );
 
@@ -173,7 +178,7 @@ class Subscriptions{
         }
 
         $args = array(
-            'status' => 'active',
+            'subscription_status' => array('active', 'on-hold', 'pending'),
             'customer_id' => $user_id,
         );
 

@@ -64,7 +64,7 @@ class Menu{
 
     /**
      * The menu page content
-     * Keeping it simple...
+     * Keeping it simple. There are no dependancies other than Woo Subscriptions CSS.
      */
     public function menu_page(){
 
@@ -109,7 +109,8 @@ class Menu{
     private function display_success(){
 
         $subscription_id = absint(  $_GET['subscription_renewed'] );
-        echo '<div class="notice notice-success"><p>Subscription #' . $subscription_id . ' successfully renewed</p></div>';
+        $edit_url = admin_url( 'post.php?post=' . $sub_id . '&action=edit' );
+        echo '<div class="notice notice-success"><p>Subscription <href="' . $edit_url. '">#' . $subscription_id . '</a> successfully renewed</p></div>';
     }
 
     /**
@@ -142,6 +143,7 @@ class Menu{
                         $subs_ids = explode( ',', sanitize_text_field( $_GET['subs_ids'] ));
                     }
                     if( ! empty( $subs_ids ) ){
+                        $message = '';
                         foreach( $subs_ids as $sub_id ){
                             $edit_url = admin_url( 'post.php?post=' . $sub_id . '&action=edit' );
                             $message .= '<p>Subscription <a href="' . $edit_url . '">#' . $sub_id . '</a> is automated</p>';
